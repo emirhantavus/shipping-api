@@ -14,7 +14,7 @@ jobs:
         image:
           postgres:15
         env:
-          POSTGRES_DB: db
+          POSTGRES_DB: shipping
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: password
         ports:
