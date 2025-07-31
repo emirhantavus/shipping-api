@@ -1,26 +1,35 @@
 from pydantic import BaseModel
 from typing import Optional
 from enum import Enum
+from datetime import datetime
 
 class ShipmentIn(BaseModel):
-      order_id: int
-      sender: str
-      reciever: str
-      reciever_phone: Optional[str] = None
+      tracking_number: str
+      sender_name: str
+      sender_adress: str
+      receiver_name: str
+      receiver_address: str
+      receiver_phone: Optional[str] = None
       description: Optional[str] = None
-      
-class ShipmentOut(BaseModel):
-      id: int
-      order_id: int
-      sender: str
-      reciever: str
-      status: str
       
 class ShipmentStatus(str, Enum):
       pending = 'pending'
       in_transit = 'in_transit'
       delivered = 'delivered'
       cancelled = 'cancelled'
+      
+class ShipmentOut(BaseModel):
+      id: str
+      tracking_number: str
+      sender_name: str
+      sender_adress: str
+      receiver_name: str
+      receiver_address: str
+      receiver_phone: Optional[str] = None
+      status: ShipmentStatus
+      description: Optional[str] = None
+      created_at: datetime
+      updated_at: datetime
       
 class ShipmentUpdateStatus(BaseModel):
       status: ShipmentStatus
