@@ -6,7 +6,7 @@ from datetime import datetime
 class ShipmentIn(BaseModel):
       tracking_number: str
       sender_name: str
-      sender_adress: str
+      sender_address: str
       receiver_name: str
       receiver_address: str
       receiver_phone: Optional[str] = None
@@ -22,7 +22,7 @@ class ShipmentOut(BaseModel):
       id: str
       tracking_number: str
       sender_name: str
-      sender_adress: str
+      sender_address: str
       receiver_name: str
       receiver_address: str
       receiver_phone: Optional[str] = None

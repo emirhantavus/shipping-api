@@ -16,7 +16,7 @@ class Shipment(Base):
       id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
       tracking_number = Column(String, unique=True, nullable=False)
       sender_name = Column(String, nullable=False)
-      sender_adress = Column(String, nullable=False)
+      sender_address = Column(String, nullable=False)
       receiver_name = Column(String, nullable=False)
       receiver_address = Column(String, nullable=False)
       receiver_phone = Column(String, nullable=True)
