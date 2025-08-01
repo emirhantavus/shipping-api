@@ -1,9 +1,7 @@
 name: FastAPI Shipment Test
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch: ## will change it when the bug is fixed. 'alembic'
 
 jobs:
   test:

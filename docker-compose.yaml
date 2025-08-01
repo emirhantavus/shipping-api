@@ -1,32 +1,40 @@
 services:
-  db:
+  shipping-db:
     image: postgres:15
     container_name: shipping-db
     restart: always
     ports:
-      - "5432:5432"
+      - "5434:5432" #5434
     environment:
       POSTGRES_DB: shipping
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ecommerce-network
 
   web:
     build: .
     container_name: shipping-api
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 9000 --reload
     volumes:
       - ./app:/app/app
       - ./tests:/app/tests
       - ./alembic:/app/alembic
       - ./alembic.ini:/app/alembic.ini
     ports:
-      - "8000:8000"
+      - "9000:9000"
     environment:
-      - DATABASE_URL=postgresql+asyncpg://postgres:password@db:5432/shipping
+      - DATABASE_URL=postgresql+asyncpg://postgres:password@shipping-db:5432/shipping
     depends_on:
-      - db
+      - shipping-db
+    networks:
+      - ecommerce-network
 
 volumes:
   postgres_data:
+
+networks:
+  ecommerce-network:
+    external: true
