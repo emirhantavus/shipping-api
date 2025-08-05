@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas.shipment import ShipmentIn, ShipmentOut,ShipmentUpdateStatus
 from app.services.shipment_service import (
-      create_shipment, delete_shipment, get_shipment_by_id ,list_shipments, update_shipment_status
+      create_shipment, delete_shipment, get_shipment_by_id ,list_shipments, update_shipment_status,
+      get_tracking_number
 )
 from app.db.session import get_db
 
@@ -23,6 +24,13 @@ async def get_shipment_endpoint(shipment_id: str, db: AsyncSession = Depends(get
       if not shipment:
             raise HTTPException(status_code=404, detail='Shipment not found')
       return shipment
+
+@router.get("/shipments/tracking_number/{tracking_number}/",response_model=ShipmentOut)
+async def get_tracking_number_endpoint(tracking_number: str, db: AsyncSession = Depends(get_db)):
+      shipment = await get_tracking_number(db, tracking_number)
+      if not shipment:
+            raise HTTPException(status_code=404, detail='Shipment not found')
+      return shipment ## sonra buna bak, belki liste seklinde cekeriz birden fazla order icin.
 
 @router.patch("/shipments/{shipment_id}/status/", response_model=ShipmentOut)
 async def update_shipment_status_endpoint(

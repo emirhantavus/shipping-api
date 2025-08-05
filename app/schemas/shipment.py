@@ -4,7 +4,6 @@ from enum import Enum
 from datetime import datetime
 
 class ShipmentIn(BaseModel):
-      tracking_number: str
       sender_name: str
       sender_address: str
       receiver_name: str

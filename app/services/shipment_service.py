@@ -2,9 +2,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.models.shipment import Shipment
 from app.schemas.shipment import ShipmentIn, ShipmentUpdateStatus
+import uuid
+
+def generate_tracking_number():
+      return f"T-{uuid.uuid4().hex[:8]}"
 
 async def create_shipment(db: AsyncSession, shipment_in: ShipmentIn) -> Shipment:
-      shipment = Shipment(**shipment_in.dict())
+      tracking_number = generate_tracking_number()
+      shipment_data = shipment_in.dict()
+      shipment_data['tracking_number'] = tracking_number
+      
+      shipment = Shipment(**shipment_data)
       db.add(shipment)
       await db.commit()
       await db.refresh(shipment)
@@ -13,6 +21,12 @@ async def create_shipment(db: AsyncSession, shipment_in: ShipmentIn) -> Shipment
 async def get_shipment_by_id(db: AsyncSession, shipment_id: str) -> Shipment:
       result = await db.execute(
             select(Shipment).where(Shipment.id==shipment_id)
+      )
+      return result.scalar_one_or_none()
+
+async def get_tracking_number(db: AsyncSession, tracking_number: str) -> Shipment:
+      result = await db.execute(
+            select(Shipment).where(Shipment.tracking_number == tracking_number)
       )
       return result.scalar_one_or_none()
 
