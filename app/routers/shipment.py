@@ -6,6 +6,7 @@ from app.services.shipment_service import (
       get_tracking_number
 )
 from app.db.session import get_db
+from app.services.webhook import notify_django_shipment_status
 
 router = APIRouter()
 
@@ -38,6 +39,9 @@ async def update_shipment_status_endpoint(
       shipment = await update_shipment_status(db, shipment_id, status_update)
       if not shipment:
             raise HTTPException(status_code=404, detail='Shipment not found')
+      
+      notify_django_shipment_status(shipment.tracking_number, shipment.status.value)
+      
       return shipment
 
 @router.delete("/shipments/{shipment_id}/",status_code=status.HTTP_204_NO_CONTENT)
