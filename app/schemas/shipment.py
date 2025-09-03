@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from enum import Enum
 from datetime import datetime
 
@@ -32,3 +32,6 @@ class ShipmentOut(BaseModel):
       
 class ShipmentUpdateStatus(BaseModel):
       status: ShipmentStatus
+      
+class TrackingNumbers(BaseModel):
+      tracking_numbers: List[str]

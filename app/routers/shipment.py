@@ -1,12 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Body
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.schemas.shipment import ShipmentIn, ShipmentOut,ShipmentUpdateStatus
+from app.schemas.shipment import ShipmentIn, ShipmentOut,ShipmentUpdateStatus, TrackingNumbers
 from app.services.shipment_service import (
       create_shipment, delete_shipment, get_shipment_by_id ,list_shipments, update_shipment_status,
-      get_tracking_number
+      get_tracking_number, get_status
 )
 from app.db.session import get_db
 from app.services.webhook import notify_django_shipment_status
+from typing import List
 
 router = APIRouter()
 
@@ -50,3 +51,8 @@ async def delete_shipment_endpoint(
       result = await delete_shipment(db, shipment_id)
       if not result:
             raise HTTPException(status_code=404, detail='Shipment not found')
+      
+@router.post("/shipments/get-status/")
+async def get_status_endpoint(payload: TrackingNumbers, db: AsyncSession = Depends(get_db)):
+      status = await get_status(db, payload.tracking_numbers)
+      return status

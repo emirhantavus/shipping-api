@@ -56,3 +56,12 @@ async def delete_shipment(db: AsyncSession, shipment_id: str) -> bool:
       await db.delete(shipment)
       await db.commit()
       return True
+
+async def get_status(db: AsyncSession, tracking_numbers: list[str]) -> dict:
+      if not tracking_numbers:
+            return {}
+      result = await db.execute(
+            select(Shipment).filter(Shipment.tracking_number.in_(tracking_numbers))
+      )
+      shipments = result.scalars().all()
+      return {s.tracking_number: s.status for s in shipments}
